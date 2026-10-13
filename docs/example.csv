@@ -1,0 +1,13 @@
+Issue Type,Priority,Issue key,Issue id,Summary,Epic Link,Assignee,Reviewer,Status,Created,Due Date,Original Estimate,Time Spent,Sprint,Sprint,Outward issue link (Blocks),Outward issue link (Blocks)
+Story,Cat 2,DEMO-1,10001,Define the public API schema,DEMO-100,,,Backlog,05/Jan/26 9:00 AM,,72000,0,SPRINT-1 (2026-01-05),SPRINT-2 (2026-01-19),DEMO-2,DEMO-3
+Story,Cat 2,DEMO-2,10002,Implement the core service,DEMO-100,,,Backlog,05/Jan/26 9:05 AM,,108000,0,SPRINT-1 (2026-01-05),,DEMO-4,
+Story,Cat 2,DEMO-3,10003,Unit tests for the schema layer,DEMO-100,,,Backlog,05/Jan/26 9:10 AM,,43200,0,SPRINT-1 (2026-01-05),,DEMO-4,
+Story,Cat 2,DEMO-4,10004,Wire up the persistence layer,DEMO-100,,,Backlog,05/Jan/26 9:15 AM,,64800,0,SPRINT-2 (2026-01-19),,DEMO-5,DEMO-6
+Story,Cat 2,DEMO-5,10005,Admin UI for managing records,DEMO-100,,,Backlog,05/Jan/26 9:20 AM,,72000,0,SPRINT-2 (2026-01-19),,DEMO-7,
+Story,Cat 2,DEMO-6,10006,Integration test suite,DEMO-100,,,Backlog,05/Jan/26 9:25 AM,,57600,0,SPRINT-2 (2026-01-19),,,
+Story,Cat 2,DEMO-7,10007,Documentation and worked examples,DEMO-100,,,Backlog,05/Jan/26 9:30 AM,,36000,0,SPRINT-3 (2026-02-02),,DEMO-8,
+Story,Cat 2,DEMO-8,10008,Package and publish the release,DEMO-100,,,Backlog,05/Jan/26 9:35 AM,,21600,0,SPRINT-3 (2026-02-02),,DEMO-9,
+Story,Cat 2,DEMO-9,10009,Announce and hand over,DEMO-100,,,Backlog,05/Jan/26 9:40 AM,,14400,0,SPRINT-3 (2026-02-02),,,
+Story,Cat 2,DEMO-10,10010,Spike: evaluate storage options,DEMO-100,,,Backlog,05/Jan/26 9:45 AM,,28800,0,SPRINT-1 (2026-01-05),,DEMO-2,
+Story,Cat 2,DEMO-11,10011,Harden error handling,DEMO-100,,,Backlog,05/Jan/26 9:50 AM,,54000,0,SPRINT-2 (2026-01-19),,DEMO-6,
+Story,Cat 2,DEMO-12,10012,Accessibility pass on the admin UI,DEMO-100,,,Backlog,05/Jan/26 9:55 AM,,28800,0,SPRINT-2 (2026-01-19),,DEMO-7,

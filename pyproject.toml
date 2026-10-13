@@ -1,0 +1,13 @@
+[project]
+name = "openedx-search-planning"
+version = "1.0.0"
+description = "Render sprint Gantt charts with precedence links from a Jira CSV export"
+requires-python = ">=3.12"
+dependencies = [
+    "matplotlib>=3.8,<4",
+]
+
+# This repo holds scripts, not an installable package, so uv should manage
+# only the environment and never try to build or install the project itself.
+[tool.uv]
+package = false

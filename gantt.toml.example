@@ -1,0 +1,33 @@
+# Per-project settings for gantt.py.
+#
+# Copy this file to `gantt.toml` and edit.  `gantt.toml` is gitignored, so
+# project-specific values (issue keys, sprint names, dates) never land in the
+# repository.  Every key is optional; the defaults are noted below.
+
+# Chart title.  Required -- gantt.py takes it as --title, and the Makefile
+# reads it from here so you do not have to type it on every invocation.
+title = "My Epic - sprint plan"
+
+# Nothing is scheduled before this date.  Useful when the team starts
+# mid-sprint.  Default: unset, meaning the first task may start at its own
+# sprint boundary.
+project_start = "2026-01-05"
+
+# Issue keys to leave out of the chart entirely, e.g. recurring overhead
+# tasks that are not part of the delivery.  Default: []
+skip = ["KEY-1", "KEY-2"]
+
+# Force a task into a sprint other than the one the export assigns it to.
+# Applies to the export's own assignment; --assignment rebalance supersedes
+# it.  Default: {}
+[sprint_override]
+"KEY-3" = "SPRINT-A"
+
+# ---------------------------------------------------------------------------
+# Scheduling policy.  These describe how the team works rather than a
+# particular project, so leave them alone unless your policy differs.
+# ---------------------------------------------------------------------------
+# hours_per_day = 7      # working hours in a day
+# days_per_week = 5      # working days in a week (weekends are non-working)
+# lag_days      = 1      # working days between a task and its dependents
+# sprint_days   = 14     # calendar length of one sprint column

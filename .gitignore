@@ -1,0 +1,17 @@
+# Jira CSV exports: never commit.  They contain issue keys, summaries and
+# estimates, and they are re-exported constantly.
+*.csv
+# ...except the synthetic example the README renders
+!docs/example.csv
+
+# Per-project settings (issue keys, sprint names, dates).  Only the
+# committed gantt.toml.example is meant to be shared.
+gantt.toml
+
+# Generated charts (rebuild with `make`)
+gantt*.png
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
