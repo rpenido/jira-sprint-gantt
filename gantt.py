@@ -57,6 +57,12 @@ ap.add_argument("--edges", choices=["all", "latest"], default="all",
                 help="all = every link in the export (default); latest = per "
                      "task, only its latest-finishing predecessor, i.e. the "
                      "link that actually gates its start")
+ap.add_argument("--order", choices=["schedule", "key", "summary"], default="schedule",
+                help="row order. schedule = earliest start first (default), "
+                     "which keeps blockers above the tasks they gate so the "
+                     "arrows flow downward. key or summary sorts the rows "
+                     "alphabetically, which is easier to scan but crosses the "
+                     "arrows.")
 ap.add_argument("--people", type=int, default=None, metavar="N",
                 help="limit to N developers at hours_per_day x days_per_week per "
                      "week each; weekends are non-working (default: unlimited)")
@@ -93,7 +99,16 @@ HDR_NAME, HDR_DATE, HDR_TOT = 0.86, 0.56, 0.36
 HDR_TOP      = 1.90
 
 # one row per task, ordered by (start, sprint)
-seq    = sorted(tasks, key=lambda k: (sched[k][0], tasks[k]["sprint"], k))
+# Row order.  "schedule" keeps each task below the ones that gate it, so the
+# arrows run downward; the alphabetical orders are easier to look a task up in
+# but discard that property and cross the arrows.
+if args.order == "key":
+    order_by = lambda k: k
+elif args.order == "summary":
+    order_by = lambda k: (tasks[k]["summary"].lower(), k)
+else:
+    order_by = lambda k: (sched[k][0], tasks[k]["sprint"], k)
+seq    = sorted(tasks, key=order_by)
 y_top  = {k: -i * ROW_PITCH for i, k in enumerate(seq)}
 lowest = min(y_top.values()) - BAR_H
 

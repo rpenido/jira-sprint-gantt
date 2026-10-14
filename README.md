@@ -90,6 +90,9 @@ uv run python gantt.py --title "My Epic - plan" --assignment rebalance \
 | `--assignment rebalance` | pull each task as early as its dependencies allow |
 | `--edges all` | draw every blocking link (default) |
 | `--edges latest` | draw only the predecessor that actually gates each task |
+| `--order schedule` | rows in earliest-start order (default) |
+| `--order key` | rows in issue-key order |
+| `--order summary` | rows in task-text order |
 | `--people N` | cap concurrency at N developers (`make capped PEOPLE=N`) |
 | `--version N` | version label appended to the title |
 | `-o` | output path |
@@ -170,6 +173,17 @@ Two assignments are available:
   then labelled with the sprint it actually starts in. This removes
   sprint-boundary waits, and can finish the work earlier when the export's
   assignment is not aligned to the dependency graph.
+
+### Row order
+
+`--order schedule` (the default) lists each task below the blockers that gate
+it, so dependency arrows flow downward and left to right. `--order key` and
+`--order summary` sort the rows alphabetically instead, which is easier to look
+a task up in but discards that property — arrows then cross the chart rather
+than stepping down it. Row order affects only the layout: dates, hours and peak
+headcount are identical in all three.
+
+### Capacity
 
 `--people N` caps how many tasks may run at once. A running task occupies one
 person, and a person supplies `days_per_week × hours_per_day` hours per week,
