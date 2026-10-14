@@ -34,19 +34,10 @@ import schedule as S
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 
-# Sprint colours cycle by sprint order, so a sprint the palette has never
-# seen gets a colour instead of a KeyError.  Hues are spread so adjacent
-# sprints stay visually separable.
-PALETTE = ["#c3d7ee",   # blue
-           "#c2ddba",   # green
-           "#f7dcb0",   # amber
-           "#eccbda",   # pink
-           "#cfc3e8",   # purple
-           "#9fd8dc",   # teal
-           "#eddc9a",   # yellow
-           "#f0b6a4",   # coral
-           "#c6dd94",   # lime
-           "#a9b6e6"]   # indigo
+# Every bar uses the same fill.  Which sprint a task belongs to is already
+# carried by the column it sits in and by its row label, so colouring by
+# sprint added a third encoding without adding information.
+BAR_COLOUR = "#c3d7ee"
 FONT = "DejaVu Sans"
 
 ap = argparse.ArgumentParser(description=__doc__,
@@ -76,7 +67,6 @@ CSV_PATH = S.find_csv(BASE, ["prog", args.csv] if args.csv else None)
 CONFIG   = S.configure(S.load_config(args.config))
 
 sprints, tasks, blocks, cols = S.load(CSV_PATH)
-pal = {c: PALETTE[i % len(PALETTE)] for i, c in enumerate(cols)}
 
 if args.assignment == "rebalance":
     assign, sched, converged = S.rebalance(sprints, tasks, blocks, cols)
@@ -163,7 +153,7 @@ for k, t in tasks.items():
         (xd0, yt - BAR_H), xd1 - xd0, BAR_H,
         boxstyle="round,pad=0,rounding_size=0.12",
         linewidth=0.9, edgecolor="#5a6a7a",
-        facecolor=pal[t["sprint"]], zorder=3))
+        facecolor=BAR_COLOUR, zorder=3))
     ax.text(t0 - dx(0.12), yt - BAR_H + 0.165, k, ha="right", va="center",
             fontsize=9, fontweight="bold", fontfamily=FONT, color="#1a1a1a", zorder=4)
     ax.text(t0 - dx(0.12), yt - BAR_H + 0.055, S.truncate(t["summary"], 52),
