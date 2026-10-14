@@ -107,7 +107,11 @@ seq    = sorted(tasks, key=lambda k: (sched[k][0], tasks[k]["sprint"], k))
 y_top  = {k: -i * ROW_PITCH for i, k in enumerate(seq)}
 lowest = min(y_top.values()) - BAR_H
 
-t_start = min(sched[k][0] for k in tasks)
+# The axis opens on the first sprint's start date, not on the first task's.
+# With a project_start that falls inside the opening sprint (e.g. the team
+# beginning mid-sprint), the earliest task still sits a few days in, and
+# starting the axis there would clip the opening sprint column.
+t_start = min(a for a, _ in win.values())
 t_end   = max(max(e for _, e in win.values()),
               max(sched[k][1] for k in tasks))
 t0, t1  = mdates.date2num(t_start), mdates.date2num(t_end)
