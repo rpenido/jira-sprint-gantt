@@ -56,9 +56,10 @@ LAG_DAYS      = 1
 SPRINT_DAYS   = 14
 
 # Populated by configure(); all optional.
-PROJECT_START = None                 # date, or None for "no floor"
-SKIP          = set()                # issue keys to omit entirely
-OVERRIDE      = {}                   # issue key -> sprint id
+PROJECT_START   = None               # date, or None for "no floor"
+SKIP            = set()              # issue keys to omit entirely
+SPRINT_OVERRIDE = {}                 # issue key -> sprint id
+BLOCKED_BY      = {}                 # issue key -> [prerequisites], replacing the export's
 
 
 def hours_per_week():
@@ -77,6 +78,8 @@ def load_config(path):
         sprint_days    = 14             calendar length of a sprint window
         [sprint_override]
         KEY = "SPRINT-ID"               force a task into another sprint
+        [blocked_by_override]
+        KEY = ["KEY-A", "KEY-B"]        replace that task's prerequisites
     """
     if not path or not os.path.exists(path):
         return {}
@@ -89,14 +92,15 @@ def load_config(path):
 def configure(cfg):
     """Apply a config dict to this module's policy defaults."""
     global HOURS_PER_DAY, DAYS_PER_WEEK, LAG_DAYS, SPRINT_DAYS
-    global PROJECT_START, SKIP, OVERRIDE
+    global PROJECT_START, SKIP, SPRINT_OVERRIDE, BLOCKED_BY
 
     HOURS_PER_DAY = float(cfg.get("hours_per_day", HOURS_PER_DAY))
     DAYS_PER_WEEK = int(cfg.get("days_per_week", DAYS_PER_WEEK))
     LAG_DAYS      = int(cfg.get("lag_days", LAG_DAYS))
     SPRINT_DAYS   = int(cfg.get("sprint_days", SPRINT_DAYS))
     SKIP          = set(cfg.get("skip", []))
-    OVERRIDE      = dict(cfg.get("sprint_override", {}))
+    SPRINT_OVERRIDE = dict(cfg.get("sprint_override", {}))
+    BLOCKED_BY      = dict(cfg.get("blocked_by_override", {}))
 
     raw = cfg.get("project_start")
     if raw:
@@ -229,7 +233,7 @@ def load(csv_path):
     order = sorted(sprints, key=lambda s: sprints[s])
     tasks = {k: v for k, v in tasks.items() if k not in SKIP}
     for k in tasks:
-        tasks[k]["sprint"] = OVERRIDE.get(k) or min(
+        tasks[k]["sprint"] = SPRINT_OVERRIDE.get(k) or min(
             tasks[k]["sprints"], key=lambda x: order.index(x))
     cols = sorted({t["sprint"] for t in tasks.values()}, key=lambda c: order.index(c))
 
@@ -238,6 +242,19 @@ def load(csv_path):
     # otherwise raise a confusing KeyError deep in the scheduler, so drop those
     # links and say so loudly rather than silently producing an early start.
     raw_blocks = {(r[c_key], r[i].strip()) for r in body for i in bl if r[i].strip()}
+
+    # Apply blocked_by_override: for each named task, discard every link the
+    # export gives it and use the configured prerequisites instead.  This runs
+    # before the endpoint validation below, so an unknown task or unknown
+    # prerequisite reuses that warning rather than needing its own.
+    for task, preds in BLOCKED_BY.items():
+        if task not in tasks:
+            print(f"warning: blocked_by_override names {task!r}, which is not "
+                  f"in this export; the entry is ignored", file=sys.stderr)
+            continue
+        raw_blocks = {e for e in raw_blocks if e[1] != task}
+        raw_blocks |= {(p, task) for p in preds}
+
     unknown = sorted({x for e in raw_blocks for x in e if x not in tasks})
     if unknown:
         print(f"warning: {len(unknown)} link endpoint(s) not in this export; "

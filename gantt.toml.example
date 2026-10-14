@@ -23,6 +23,15 @@ skip = ["KEY-1", "KEY-2"]
 [sprint_override]
 "KEY-3" = "SPRINT-A"
 
+# Replace a task's prerequisites entirely.  The list becomes the ONLY things
+# that block it -- every link the export points at that task is discarded, so
+# to keep some of them you must list them here too.  Use an empty list to
+# clear a task's prerequisites and let it start as early as its sprint
+# allows.  Default: {}
+[blocked_by_override]
+"KEY-4" = ["KEY-1", "KEY-2"]
+"KEY-5" = []
+
 # ---------------------------------------------------------------------------
 # Scheduling policy.  These describe how the team works rather than a
 # particular project, so leave them alone unless your policy differs.

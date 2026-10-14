@@ -116,10 +116,34 @@ skip = ["KEY-1", "KEY-2"]
 # force a task into a different sprint than the export says
 [sprint_override]
 "KEY-3" = "SPRINT-A"
+
+# replace a task's prerequisites entirely
+[blocked_by_override]
+"KEY-4" = ["KEY-1", "KEY-2"]
+"KEY-5" = []
 ```
 
 `title` is read by the `Makefile` and passed to the script as `--title`, so you
 do not have to repeat it. Everything else is optional.
+
+`blocked_by_override` **replaces** a task's prerequisites rather than adding to
+them: the listed keys become the *only* things blocking that task, and every
+link the export points at it is discarded. So to keep some, list them too. An
+empty list clears a task's prerequisites and lets it start as early as its
+sprint allows:
+
+```toml
+[blocked_by_override]
+# keep one of its six blockers, drop the rest
+"KEY-4" = ["KEY-1"]
+# nothing blocks this one any more
+"KEY-5" = []
+```
+
+This changes the schedule, not just the arrows. A key that is not in the
+export is reported and ignored; a prerequisite that is not in the export is
+dropped with the same warning used for dangling links; and an override that
+introduces a loop fails with `cycle detected in blocking links`.
 
 The config file can also override the scheduling policy (see
 `gantt.toml.example`), which defaults to a five-day week of seven-hour days
