@@ -1,5 +1,5 @@
 [project]
-name = "openedx-search-planning"
+name = "jira-sprint-gantt"
 version = "1.0.0"
 description = "Render sprint Gantt charts with precedence links from a Jira CSV export"
 requires-python = ">=3.12"
